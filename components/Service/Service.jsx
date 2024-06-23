@@ -20,7 +20,7 @@ const Service = () => {
           </p>
           <h3>Filter & Discover</h3>
           <p>
-            Connect with wallet, discover, buy NTFs, sell your NFTs and earn
+            With so many NFT's to discover were sure you'll find one you'll love.
             money
           </p>
         </div>
@@ -34,10 +34,9 @@ const Service = () => {
           <p className={Style.service_box_item_step}>
             <span>Step 1</span>
           </p>
-          <h3>Filter & Discover</h3>
+          <h3>Choose NFT</h3>
           <p>
-            Connect with wallet, discover, buy NTFs, sell your NFTs and earn
-            money
+            Choose between hundreds of NFT's and pick your favorite one.
           </p>
         </div>
         <div className={Style.service_box_item}>
@@ -52,8 +51,8 @@ const Service = () => {
           </p>
           <h3>Connect Wallet</h3>
           <p>
-            Connect with wallet, discover, buy NTFs, sell your NFTs and earn
-            money
+            Connect with wallet with ease and start on your NFT journey.
+            
           </p>
         </div>
         <div className={Style.service_box_item}>
@@ -68,8 +67,7 @@ const Service = () => {
           </p>
           <h3>Start trading</h3>
           <p>
-            Connect with wallet, discover, buy NTFs, sell your NFTs and earn
-            money
+            Trading NFT's has never been easier.
           </p>
         </div>
       </div>
