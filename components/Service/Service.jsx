@@ -32,7 +32,7 @@ const Service = () => {
             height={100}
           />
           <p className={Style.service_box_item_step}>
-            <span>Step 1</span>
+            <span>Step 2</span>
           </p>
           <h3>Choose NFT</h3>
           <p>
@@ -47,7 +47,7 @@ const Service = () => {
             height={100}
           />
           <p className={Style.service_box_item_step}>
-            <span>Step 1</span>
+            <span>Step 3</span>
           </p>
           <h3>Connect Wallet</h3>
           <p>
@@ -63,7 +63,7 @@ const Service = () => {
             height={100}
           />
           <p className={Style.service_box_item_step}>
-            <span>Step 1</span>
+            <span>Step 4</span>
           </p>
           <h3>Start trading</h3>
           <p>
