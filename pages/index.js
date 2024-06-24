@@ -36,15 +36,15 @@ const Home = () => {
   const [nfts, setNfts] = useState([]);
   const [nftsCopy, setNftsCopy] = useState([]);
 
-  useEffect(() => {
-    // if (currentAccount) {
-    fetchNFTs().then((items) => {
-      console.log(nfts);
-      setNfts(items?.reverse());
-      setNftsCopy(items);
-    });
-    // }
-  }, []);
+  fetchNFTs().then((items) => {
+    console.log(items); // Check the content of items
+    if (Array.isArray(items)) {
+      setNfts(items.reverse());
+      setNftsCopy([...items]); // Using spread syntax to create a new array
+    } else {
+      console.error("Fetch operation did not return an array");
+    }
+  });
 
   //CREATOR LIST
 
