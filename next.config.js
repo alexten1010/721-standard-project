@@ -5,4 +5,4 @@ module.exports = {
     domains: ["gateway.pinata.cloud"],
     formats: ["image/webp"],
   },
-};
+}; 
