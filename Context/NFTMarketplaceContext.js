@@ -52,8 +52,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
 
   const checkIfWalletConnected = async () => {
     try {
-      if (!window.ethereum)
-        return setOpenError(true), setError("Install MetaMask");
+      if (!window.ethereum) return;
 
       const accounts = await window.ethereum.request({
         method: "eth_accounts",
@@ -66,6 +65,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
         // setError("No Account Found");
         // setOpenError(true);
         console.log("No account");
+        return;
       }
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -191,17 +191,18 @@ export const NFTMarketplaceProvider = ({ children }) => {
 
   //--FETCHNFTS FUNCTION
 
+  // Read-only fetch: never forces a wallet popup. Returns [] when the
+  // contract can't be reached so pages can fall back gracefully.
   const fetchNFTs = async () => {
     try {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
+      if (typeof window === "undefined" || !window.ethereum) return [];
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const code = await provider.getCode(NFTMarketplaceAddress);
+      if (!code || code === "0x") return [];
 
       const contract = fetchContract(provider);
-
       const data = await contract.fetchMarketItems();
-
-      console.log(data);
 
       const items = await Promise.all(
         data.map(
@@ -210,7 +211,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
 
             const {
               data: { image, name, description },
-            } = await axios.get(tokenURI, {});
+            } = await axios.get(tokenURI, { timeout: 10000 });
             const price = ethers.utils.formatUnits(
               unformattedPrice.toString(),
               "ether"
@@ -230,18 +231,11 @@ export const NFTMarketplaceProvider = ({ children }) => {
         )
       );
       return items;
-
-      // }
     } catch (error) {
-      // setError("Error while fetching NFTS");
-      // setOpenError(true);
-      console.log(error);
+      console.log("Unable to fetch NFTs from the contract", error);
+      return [];
     }
   };
-
-  useEffect(() => {
-    fetchNFTs();
-  }, []);
 
   //--FETCHING MY NFT OR LISTED NFTs
   const fetchMyNFTsOrListedNFTs = async (type) => {
@@ -322,7 +316,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
 
   const connectToTransferFunds = async () => {
     try {
-      const web3Modal = new Wenb3Modal();
+      const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
       const signer = provider.getSigner();
@@ -345,7 +339,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
 
         const unFormatedPrice = ethers.utils.parseEther(ether);
         // //FIRST METHOD TO TRANSFER FUND
-        await ethereum.request({
+        await window.ethereum.request({
           method: "eth_sendTransaction",
           params: [
             {
@@ -381,7 +375,7 @@ export const NFTMarketplaceProvider = ({ children }) => {
   //FETCH ALL TRANSACTION
   const getAllTransactions = async () => {
     try {
-      if (ethereum) {
+      if (typeof window !== "undefined" && window.ethereum) {
         const contract = await connectToTransferFunds();
 
         const avaliableTransaction = await contract.getAllTransactions();

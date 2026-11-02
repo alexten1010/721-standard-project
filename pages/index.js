@@ -20,31 +20,35 @@ import {
   Loader,
 } from "../components/componentsindex";
 import { getTopCreators } from "../TopCreators/TopCreators";
+import { demoNFTs } from "../lib/demoNFTs";
 
 //IMPORTING CONTRCT DATA
 import { NFTMarketplaceContext } from "../Context/NFTMarketplaceContext";
 
 const Home = () => {
-  const { checkIfWalletConnected, currentAccount } = useContext(
+  const { checkIfWalletConnected, fetchNFTs } = useContext(
     NFTMarketplaceContext
   );
-  useEffect(() => {
-    checkIfWalletConnected();
-  }, []);
-
-  const { fetchNFTs } = useContext(NFTMarketplaceContext);
   const [nfts, setNfts] = useState([]);
-  const [nftsCopy, setNftsCopy] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  fetchNFTs().then((items) => {
-    console.log(items); // Check the content of items
-    if (Array.isArray(items)) {
-      setNfts(items.reverse());
-      setNftsCopy([...items]); // Using spread syntax to create a new array
-    } else {
-      console.error("Fetch operation did not return an array");
-    }
-  });
+  useEffect(() => {
+    let active = true;
+    checkIfWalletConnected();
+
+    fetchNFTs()
+      .then((items) => {
+        if (!active) return;
+        const list = Array.isArray(items) && items.length ? items : demoNFTs;
+        setNfts([...list].reverse());
+      })
+      .catch(() => active && setNfts(demoNFTs))
+      .finally(() => active && setLoading(false));
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   //CREATOR LIST
 
@@ -61,7 +65,7 @@ const Home = () => {
         paragraph="Discover the most outstanding NFTs in all topics of life."
       />
       <AudioLive />
-      {creators.length == 0 ? (
+      {loading ? (
         <Loader />
       ) : (
         <FollowerTab TopCreator={creators} />
@@ -74,7 +78,7 @@ const Home = () => {
         paragraph="Discover the most outstanding NFTs in all topics of life."
       />
       <Filter />
-      {nfts.length == 0 ? <Loader /> : <NFTCard NFTData={nfts} />}
+      {loading ? <Loader /> : <NFTCard NFTData={nfts} />}
 
       <Title
         heading="Browse by category"
