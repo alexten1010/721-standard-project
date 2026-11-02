@@ -8,6 +8,7 @@ import { Filter } from "../components/componentsindex";
 
 import { NFTCardTwo, Banner } from "../collectionPage/collectionIndex";
 import images from "../img";
+import { demoNFTs } from "../lib/demoNFTs";
 
 //SMART CONTRACT IMPORT
 import { NFTMarketplaceContext } from "../Context/NFTMarketplaceContext";
@@ -20,21 +21,18 @@ const searchPage = () => {
   const [nftsCopy, setNftsCopy] = useState([]);
 
   useEffect(() => {
-    try {
-      // if (currentAccount) {
-      fetchNFTs().then((items) => {
-        setNfts(items.reverse());
-        setNftsCopy(items);
-        console.log(nfts);
+    fetchNFTs()
+      .catch(() => [])
+      .then((items) => {
+        const list = Array.isArray(items) && items.length ? items : demoNFTs;
+        const ordered = [...list].reverse();
+        setNfts(ordered);
+        setNftsCopy(ordered);
       });
-      // }
-    } catch (error) {
-      setError("Please reload the browser", error);
-    }
   }, []);
 
   const onHandleSearch = (value) => {
-    const filteredNFTS = nfts.filter(({ name }) =>
+    const filteredNFTS = nftsCopy.filter(({ name = "" }) =>
       name.toLowerCase().includes(value.toLowerCase())
     );
 
