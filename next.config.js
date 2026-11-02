@@ -2,7 +2,8 @@
 module.exports = {
   reactStrictMode: true,
   images: {
+    unoptimized: true,
     domains: ["gateway.pinata.cloud"],
     formats: ["image/webp"],
   },
-}; 
+};
